@@ -94,3 +94,4 @@ typings/
 
 # Skip the lib folder
 lib/
+.idea/
