@@ -1,5 +1,5 @@
 { pkgs ? import <nixpkgs> {} }:
 with pkgs;
 mkShell {
-  nativeBuildInputs = [ yarn ];
+  nativeBuildInputs = [ yarn nodejs ];
 }

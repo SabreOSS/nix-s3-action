@@ -3,6 +3,15 @@ description: 'nix-build with the help of caching to S3'
 # Not sure what to do with author name?
 author: 'Domen Kožar, Ulrik Strid'
 inputs:
+  projectId:
+    description: 'GCS Project'
+    required: true
+  bucket:
+    description: 'GCS Bucket'
+    required: true
+  key:
+    description: 'Cache key'
+    required: true
   endpoint:
     description: 'S3 endpoint, s3://...'
     required: true

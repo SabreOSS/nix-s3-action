@@ -4,12 +4,16 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import { URL } from "url";
+import {downloadFolderFromGCS} from "./gcs";
 
 export const IsPost = !!process.env['STATE_isPost']
 
 function getInputs() {
   try {
     return {
+      projectId: core.getInput('projectId', { required: true }),
+      bucket: core.getInput('bucket', { required: true }),
+      key: core.getInput('key', { required: true }),
       endpoint: core.getInput('endpoint', { required: true }),
       signingKey: core.getInput('signingKey', { required: true }),
       awsAccessKeyId: core.getInput('awsAccessKeyId'),
@@ -39,6 +43,9 @@ async function setup() {
         awsSecretAccessKey,
         skipPush,
         endpoint,
+        projectId,
+        bucket,
+        key,
       } = inputs;
 
       // for managed signing key and private caches
@@ -65,6 +72,11 @@ aws_secret_access_key = ${awsSecretAccessKey}`;
         fs.mkdirSync(nix_path)
         fs.writeFileSync(key_path, signingKey);
       }
+
+      downloadFolderFromGCS(projectId, bucket, key, '.')
+          .then(() => console.log('Folder downloaded successfully'))
+          .catch(err => console.error('Error downloading folder:', err));
+
       // Remember existing store paths
       await exec.exec("sh", ["-c", `${__dirname}/list-nix-store.sh > /tmp/store-path-pre-build`]);
     } catch (error) {
